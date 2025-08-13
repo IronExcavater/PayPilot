@@ -1,4 +1,8 @@
-﻿/*#if (SampleContent)*/
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*#if (SampleContent)*/
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

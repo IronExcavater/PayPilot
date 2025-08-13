@@ -6,3 +6,7 @@
 bin/
 obj/
 /packages/
+
+node_modules/
+package-lock.json
+*.generated.*
