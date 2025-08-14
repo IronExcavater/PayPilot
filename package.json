@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "tailwindcss -i ./PayPilot/wwwroot/css/tailwind.css -o ./PayPilot/wwwroot/css/tailwind.generated.css --minify"
+    "build:css": "tailwindcss -i ./PayPilot/wwwroot/css/app.css -o ./PayPilot/wwwroot/css/app.generated.css --minify"
   },
   "repository": {
     "type": "git",

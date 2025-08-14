@@ -1,0 +1,66 @@
+﻿@namespace PayPilot.Components.Shared
+
+<div>
+    <span>@Code</span>
+    <h1>@Title</h1>
+</div>
+
+<p>@Message</p>
+@if (!string.IsNullOrWhiteSpace(Details))
+{
+    <details>
+        <summary>Technical Details</summary>
+        <pre>@Details</pre>
+    </details>
+}
+<RadzenLink Path="\" Text="Go to url" Target="_blank" />
+
+<a href="@PrimaryHref" >
+    <RadzenButton ButtonStyle="ButtonStyle.Primary" Text="@PrimaryText" />
+</a>
+<a href="@SecondaryHref" >
+    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="SecondaryAction" L Text="@SecondaryText" />
+</a>
+@*@if (PrimaryAction.HasDelegate)
+{
+    <button @onclick="PrimaryAction" >@PrimaryText</button>
+}
+else if (!string.IsNullOrWhiteSpace(PrimaryHref))
+{
+    <a href="@PrimaryHref" ><button>@PrimaryText</button></a>
+}*@
+
+@code {
+    [Parameter] public int Code { get; set; } = 500;
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public string? Details { get; set; }
+
+    [Parameter] public string? PrimaryText { get; set; } = "Reload";
+    [Parameter] public string? PrimaryHref { get; set; } = "\\";
+    [Parameter] public EventCallback PrimaryAction { get; set; }
+
+    [Parameter] public string? SecondaryText { get; set; }
+    [Parameter] public string? SecondaryHref { get; set; }
+    [Parameter] public EventCallback SecondaryAction { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var resolved = DefaultsFor(Code);
+        Title ??= resolved.title;
+        Message ??= resolved.message;
+    }
+
+    private static (string title, string message) DefaultsFor(int code) => code switch
+    {
+        400 => ("Bad Request", ""),
+        401 => ("Unauthorized", ""),
+        403 => ("Forbidden", ""),
+        404 => ("Not Found", "Could not locate resource."),
+        422 => ("Unprocessable Content", ""),
+        500 => ("Internal Server Error", ""),
+        503 => ("Service Unavailable", ""),
+        _ => ("Unknown Error", "Something went wrong.")
+    };
+
+}

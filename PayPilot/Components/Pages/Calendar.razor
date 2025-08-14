@@ -1,0 +1,24 @@
+﻿@page "/calendar"
+
+<h3>Calendar</h3>
+
+<RadzenScheduler
+    @ref=@scheduler TItem="Shift" Data=@shifts
+    StartProperty="Start" EndProperty="End" TextProperty="Title">
+    <RadzenWeekView/>
+</RadzenScheduler>
+
+@code {
+    RadzenScheduler<Shift> scheduler;
+
+    IList<Shift> shifts = new List<Shift>
+    {
+        new() { Start = DateTime.Today.AddDays(-2), End = DateTime.Today.AddDays(-2), Title = "Birthday" },
+        new() { Start = DateTime.Today.AddDays(-11), End = DateTime.Today.AddDays(-10), Title = "Day off" },
+        new() { Start = DateTime.Today.AddDays(-10), End = DateTime.Today.AddDays(-8), Title = "Work from home" },
+        new() { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(12), Title = "Online meeting" },
+        new() { Start = DateTime.Today.AddHours(10), End = DateTime.Today.AddHours(13), Title = "Skype call" },
+        new() { Start = DateTime.Today.AddHours(14), End = DateTime.Today.AddHours(14).AddMinutes(30), Title = "Dentist appointment" },
+        new() { Start = DateTime.Today.AddDays(1), End = DateTime.Today.AddDays(12), Title = "Vacation" },
+    };
+}
