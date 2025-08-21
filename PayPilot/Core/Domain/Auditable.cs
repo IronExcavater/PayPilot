@@ -1,11 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PayPilot.Core.Domain;
 
 public class Auditable
 {
-    public Guid Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
-    public Guid CreatedBy { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public Guid? UpdateBy { get; set; }
-    public DateTime? UpdateAt { get; set; }
+    public int CreatedBy { get; set; }
+    public User CreatedByUser { get; set; }
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+
+    public int? UpdatedBy { get; set; }
+    public User? UpdatedByUser { get; set; }
+    public DateTime? UpdatedUtc { get; set; }
 }

@@ -1,9 +1,10 @@
 namespace PayPilot.Core.Domain;
 
-public class Job
+public class Job : Auditable
 {
-    public Guid Id { get; set; }
-
+    public int UserId { get; set; }
     public User User { get; set; }
-    public Guid UserId { get; set; }
+
+    public DateTime FromUtc  { get; set; }
+    public DateTime ToUtc { get; set; }
 }

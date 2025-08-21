@@ -4,11 +4,11 @@ namespace PayPilot.Core.Domain;
 
 public class PayRule : Auditable
 {
+    public int JobId { get; set; }
     public Job Job { get; set; }
-    public Guid JobId { get; set; }
 
-    public DateTime EffectiveFrom { get; set; }
-    public DateTime? EffectiveTo { get; set; }
+    public DateTime FromUtc { get; set; }
+    public DateTime? ToUtc { get; set; }
 
     public decimal Amount { get; set; }
     public RuleOperation Operation { get; set; }

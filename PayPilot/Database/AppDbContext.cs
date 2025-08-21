@@ -3,14 +3,12 @@ using PayPilot.Core.Domain;
 
 namespace PayPilot.Database;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Job> Jobs => Set<Job>();
     public DbSet<Shift> Shifts => Set<Shift>();
     public DbSet<PayRule> PayRules => Set<PayRule>();
-
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,13 +20,22 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Shift>().ToTable("Shifts");
         modelBuilder.Entity<PayRule>().ToTable("PayRules");
 
-        // Primary keys
-        modelBuilder.Entity<User>().HasKey(x => x.Id);
-        modelBuilder.Entity<Job>().HasKey(x => x.Id);
-        modelBuilder.Entity<Shift>().HasKey(x => x.Id);
-        modelBuilder.Entity<PayRule>().HasKey(x => x.Id);
-
         // Foreign keys
+        foreach (var t in modelBuilder.Model.GetEntityTypes())
+        {
+            if (!typeof(Auditable).IsAssignableFrom(t.ClrType)) continue;
+
+            modelBuilder.Entity(t.ClrType)
+                .HasOne(typeof(User), "CreatedByUser").WithMany()
+                .HasForeignKey("CreatedBy")
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity(t.ClrType)
+                .HasOne(typeof(User), "UpdatedByUser").WithMany()
+                .HasForeignKey("UpdatedBy")
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
         modelBuilder.Entity<Shift>()
             .HasOne(x => x.Job).WithMany()
             .HasForeignKey(x => x.JobId)
