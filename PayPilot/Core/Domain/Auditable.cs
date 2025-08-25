@@ -1,17 +1,26 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PayPilot.Core.Domain;
 
 public class Auditable
 {
-    [Key]
-    public int Id { get; set; }
+    [Key] public int Id { get; set; }
+    [Timestamp] public byte[] Version { get; set; } = Array.Empty<byte>();
 
-    public int CreatedBy { get; set; }
-    public User CreatedByUser { get; set; }
+    public AuditStatus Status { get; set; } = AuditStatus.Active;
+
+    [Required] public int CreatedBy { get; set; }
+    [ForeignKey(nameof(CreatedBy))] public User CreatedByUser { get; set; }
     public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
     public int? UpdatedBy { get; set; }
-    public User? UpdatedByUser { get; set; }
+    [ForeignKey(nameof(UpdatedBy))] public User? UpdatedByUser { get; set; }
     public DateTime? UpdatedUtc { get; set; }
+}
+
+public enum AuditStatus
+{
+    Active,
+    Inactive
 }

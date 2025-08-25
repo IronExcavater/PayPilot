@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PayPilot.Core.Services;
 using PayPilot.Database;
 using SQLitePCL;
 
@@ -19,14 +20,19 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
+        builder.Services.AddScoped<IUserContext>(sp =>
+            new UserContext { UserId = 1, IsAuthenticated = true });
+        builder.Services.AddScoped<AuditStampInterceptor>();
+
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "paypilot.db");
-        builder.Services.AddDbContext<AppDbContext>(opt =>
+        builder.Services.AddDbContext<AppDbContext>((sp, opt) =>
         {
             opt.UseSqlite($"Data Source={dbPath}");
 #if DEBUG
             opt.EnableSensitiveDataLogging();
             opt.EnableDetailedErrors();
 #endif
+            opt.AddInterceptors(sp.GetRequiredService<AuditStampInterceptor>());
         });
 
         builder.Services.AddMauiBlazorWebView();

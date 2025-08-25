@@ -1,18 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using NodaMoney;
 
 namespace PayPilot.Core.Domain;
 
 public class PayRule : Auditable
 {
-    public int JobId { get; set; }
-    public Job Job { get; set; }
+    [Required] public required int JobId { get; set; }
+    [ForeignKey(nameof(JobId))] public Job Job { get; set; }
 
-    public DateTime FromUtc { get; set; }
+    public DateTime? FromUtc { get; set; }
     public DateTime? ToUtc { get; set; }
 
-    public decimal Amount { get; set; }
-    public RuleOperation Operation { get; set; }
-    public required RuleCondition Condition { get; set; }
+    [Required] public required Money Money { get; set; }
+    [Required] public required RuleOperation Operation { get; set; }
+    [Required] public required RuleCondition Condition { get; set; }
 }
 
 public enum RuleOperation

@@ -14,45 +14,45 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
-        // Explicit naming
-        modelBuilder.Entity<User>().ToTable("Users");
-        modelBuilder.Entity<Job>().ToTable("Jobs");
-        modelBuilder.Entity<Shift>().ToTable("Shifts");
-        modelBuilder.Entity<PayRule>().ToTable("PayRules");
-
         // Foreign keys
         foreach (var t in modelBuilder.Model.GetEntityTypes())
         {
             if (!typeof(Auditable).IsAssignableFrom(t.ClrType)) continue;
 
             modelBuilder.Entity(t.ClrType)
-                .HasOne(typeof(User), "CreatedByUser").WithMany()
-                .HasForeignKey("CreatedBy")
+                .HasOne(typeof(User), nameof(Auditable.CreatedByUser)).WithMany()
+                .HasForeignKey(nameof(Auditable.CreatedBy))
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity(t.ClrType)
-                .HasOne(typeof(User), "UpdatedByUser").WithMany()
-                .HasForeignKey("UpdatedBy")
+                .HasOne(typeof(User), nameof(Auditable.UpdatedByUser)).WithMany()
+                .HasForeignKey(nameof(Auditable.UpdatedBy))
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
         modelBuilder.Entity<Shift>()
-            .HasOne(x => x.Job).WithMany()
-            .HasForeignKey(x => x.JobId)
+            .HasOne(e => e.Job).WithMany()
+            .HasForeignKey(e => e.JobId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<PayRule>()
-            .HasOne(x => x.Job).WithMany()
-            .HasForeignKey(x => x.JobId)
+            .HasOne(e => e.Job).WithMany()
+            .HasForeignKey(e => e.JobId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Job>()
-            .HasOne(x => x.User).WithMany()
-            .HasForeignKey(x => x.UserId)
+            .HasOne(e => e.User).WithMany()
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Temporal indexes (fast access)
         modelBuilder.Entity<PayRule>()
-            .HasIndex(x => new { x.JobId, x.EffectiveFrom, x.EffectiveTo });
+            .HasIndex(e => new { e.JobId, e.FromUtc, e.ToUtc });
+
+        // Value converters
+        modelBuilder.Entity<PayRule>()
+            .Property(e => e.Money)
+            .HasConversion(MoneyConverter.MoneyToString)
+            .HasColumnType("TEXT");
     }
 }

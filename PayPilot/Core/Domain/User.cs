@@ -1,8 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PayPilot.Core.Domain;
 
 public class User : Auditable
 {
-    public required string DisplayName { get; set; }
-    public string? TimeZone { get; set; }
-    public string? Email { get; set; }
+    [Required, MaxLength(64)] public required string DisplayName { get; set; }
+    [MaxLength(64)] public string? Email { get; set; }
 }

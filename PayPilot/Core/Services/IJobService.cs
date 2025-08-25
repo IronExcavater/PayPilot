@@ -1,11 +1,13 @@
 using PayPilot.Core.Domain;
+using PayPilot.Core.Dtos;
 
 namespace PayPilot.Core.Services;
 
 public interface IJobService
 {
-    Task<Job?> GetAsync(int id, CancellationToken ct = default);
-    Task<Job> CreateAsync(int userId, CancellationToken ct = default);
-    Task<Job> UpdateAsync(Job job, int userId, CancellationToken ct = default);
-    Task<Job> DeleteAsync(Job job, int userId, CancellationToken ct = default);
+    Task<JobReadDto?> GetAsync(int id, CancellationToken ct = default);
+    Task<JobReadDto> CreateAsync(JobCreateDto dto, CancellationToken ct = default);
+    Task<JobReadDto> UpdateAsync(int id, JobUpdateDto dto, CancellationToken ct = default);
+    Task SoftDeleteAsync(int id, CancellationToken ct = default);
+    Task DeleteAsync(int id, CancellationToken ct = default);
 }

@@ -68,6 +68,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
         <PackageReference Include="Radzen.Blazor" Version="7.1.8" />
         <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.1" />
+        <PackageReference Include="NodaMoney" Version="1.1.0" />
     </ItemGroup>
 
 </Project>
