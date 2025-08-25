@@ -22,7 +22,7 @@ public static class MauiProgram
 
         builder.Services.AddScoped<IUserContext>(sp =>
             new UserContext { UserId = 1, IsAuthenticated = true });
-        builder.Services.AddScoped<AuditStampInterceptor>();
+        builder.Services.AddScoped<AuditInterceptor>();
 
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "paypilot.db");
         builder.Services.AddDbContext<AppDbContext>((sp, opt) =>
@@ -32,8 +32,11 @@ public static class MauiProgram
             opt.EnableSensitiveDataLogging();
             opt.EnableDetailedErrors();
 #endif
-            opt.AddInterceptors(sp.GetRequiredService<AuditStampInterceptor>());
+            opt.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
         });
+
+        builder.Services.AddScoped<IJobService, JobService>();
+        builder.Services.AddScoped<IShiftService, ShiftService>();
 
         builder.Services.AddMauiBlazorWebView();
 

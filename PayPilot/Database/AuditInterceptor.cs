@@ -5,7 +5,7 @@ using PayPilot.Core.Services;
 
 namespace PayPilot.Database;
 
-public class AuditStampInterceptor(IUserContext ctx) : SaveChangesInterceptor
+public class AuditInterceptor(IUserContext ctx) : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
